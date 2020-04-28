@@ -12,10 +12,41 @@ import GameplayKit
 class GameScene: SKScene {
     
     var board: Board!
-
+    var resetButton: SKLabelNode!
+    
     override func didMove(to view: SKView) {
         board = Board()
         createBoard()
+        generateButton()
+    }
+    
+    private func restarting(){
+        restart()
+        board = Board()
+        createBoard()
+    }
+    
+    private func generateButton(){
+        resetButton = SKLabelNode(fontNamed: "ArialRoundedMTBold")
+        resetButton.zPosition = 1
+        resetButton.position = CGPoint(x: 0, y: 0)
+        resetButton.fontSize = 40
+        resetButton.text = "Best Score: \(UserDefaults.standard.integer(forKey: "resetButton"))"
+        resetButton.fontColor = SKColor.white
+        self.addChild(resetButton)
+    }
+    
+    private func restart(){
+        for col in board.columns {
+            if let dropper = col.dropper {
+                dropper.removeFromParent()
+            }
+            for cell in col.cells {
+                if let node = cell.node {
+                    node.removeFromParent()
+                }
+            }
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
